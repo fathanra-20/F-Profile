@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/profil",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/profil/",
+      "destination": "/index.html"
+    }
+  ]
+}

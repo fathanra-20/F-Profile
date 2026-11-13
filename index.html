@@ -16,7 +16,7 @@
       property="og:description"
       content="Halaman profil diri mahasiswa dan daftar mata kuliah semester berjalan untuk tugas Pengembangan Aplikasi Web."
     />
-    <meta property="og:image" content="./assets/profile.jpg" />
+    <meta property="og:image" content="./assets/profile.png" />
     <meta property="og:type" content="profile" />
 
     <link rel="stylesheet" href="./style.css" />
@@ -207,5 +207,60 @@
         <p>© 2026 Fathan Rafif Athaya. Hak Cipta Dilindungi.</p>
       </footer>
     </div>
+
+    <script>
+      const navigationLinks = document.querySelectorAll('.nav-container a[href^="#"]');
+      const originalScrollBehavior = document.documentElement.style.scrollBehavior;
+      let activeAnimation;
+
+      function gentleScroll(target, hash) {
+        const startPosition = window.scrollY;
+        const headerOffset = 88;
+        const targetPosition = Math.max(
+          0,
+          Math.min(
+            target.getBoundingClientRect().top + startPosition - headerOffset,
+            document.documentElement.scrollHeight - window.innerHeight,
+          ),
+        );
+        const distance = targetPosition - startPosition;
+        const duration = 1400;
+        const startTime = performance.now();
+
+        cancelAnimationFrame(activeAnimation);
+        document.documentElement.style.scrollBehavior = "auto";
+
+        function animate(currentTime) {
+          const progress = Math.min((currentTime - startTime) / duration, 1);
+          const easedProgress = 0.5 - Math.cos(progress * Math.PI) / 2;
+
+          window.scrollTo({
+            top: startPosition + distance * easedProgress,
+            left: 0,
+            behavior: "auto",
+          });
+
+          if (progress < 1) {
+            activeAnimation = requestAnimationFrame(animate);
+          } else {
+            document.documentElement.style.scrollBehavior = originalScrollBehavior;
+            history.pushState(null, "", hash);
+          }
+        }
+
+        activeAnimation = requestAnimationFrame(animate);
+      }
+
+      navigationLinks.forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const target = document.querySelector(link.getAttribute("href"));
+
+          if (!target) return;
+
+          event.preventDefault();
+          gentleScroll(target, link.getAttribute("href"));
+        });
+      });
+    </script>
   </body>
 </html>
